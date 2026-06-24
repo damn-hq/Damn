@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "deny": ["Read(*/.env)"]
+  },
+  "env": {
+    "CLAUDE_TELEMETRY_DISABLED": "1"
+  }
+}
