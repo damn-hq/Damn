@@ -1,3 +1,6 @@
+# Local wrangler dev secrets. Copy to `.dev.vars` (git-ignored) and fill in.
+# In production these are set via: npx wrangler secret put <NAME>
+
 # Notion integration token (https://www.notion.so/my-integrations)
 NOTION_API_KEY=secret_xxx
 
@@ -5,11 +8,4 @@ NOTION_API_KEY=secret_xxx
 NOTION_DB_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 # Cloudflare Turnstile secret key. Local dev "always passes" test secret:
-# 1x0000000000000000000000000000000AA
 TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA
-
-# Server port
-PORT=8787
-
-# Allowed CORS origin (the client app)
-ALLOWED_ORIGIN=http://localhost:5173

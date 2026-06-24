@@ -1,11 +1,10 @@
 name = "damn-api"
 main = "src/index.ts"
 compatibility_date = "2025-06-01"
-compatibility_flags = ["nodejs_compat"]
 
 [vars]
-# Comma-separated allowed CORS origins. Update to the real Pages URL after first deploy.
-ALLOWED_ORIGIN = "http://localhost:5173"
+# Comma-separated allowed CORS origins.
+ALLOWED_ORIGIN = "https://damn-hq.pages.dev,http://localhost:5173"
 
 # Rate limit: 5 requests / 60s per IP — replaces express-rate-limit.
 [[unsafe.bindings]]

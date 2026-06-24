@@ -7,3 +7,4 @@ dist/
 .vscode/
 *.log
 npm-debug.log*
+.dev.vars
