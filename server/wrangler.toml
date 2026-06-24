@@ -1,0 +1,20 @@
+name = "damn-api"
+main = "src/index.ts"
+compatibility_date = "2025-06-01"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+# Comma-separated allowed CORS origins. Update to the real Pages URL after first deploy.
+ALLOWED_ORIGIN = "http://localhost:5173"
+
+# Rate limit: 5 requests / 60s per IP — replaces express-rate-limit.
+[[unsafe.bindings]]
+name = "INQUIRY_LIMITER"
+type = "ratelimit"
+namespace_id = "1001"
+simple = { limit = 5, period = 60 }
+
+# Secrets (set via CLI, NOT here):
+#   npx wrangler secret put NOTION_API_KEY
+#   npx wrangler secret put NOTION_DB_ID
+#   npx wrangler secret put TURNSTILE_SECRET_KEY

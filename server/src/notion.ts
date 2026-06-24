@@ -1,16 +1,6 @@
 import { Client } from "@notionhq/client";
 import type { Inquiry } from "./schema.js";
-
-let client: Client | null = null;
-
-function getClient(): Client {
-  if (!client) {
-    const auth = process.env.NOTION_API_KEY;
-    if (!auth) throw new Error("NOTION_API_KEY is not set");
-    client = new Client({ auth });
-  }
-  return client;
-}
+import type { Env } from "./env.js";
 
 /**
  * Creates a row in the configured Notion database for an inquiry.
@@ -18,12 +8,14 @@ function getClient(): Client {
  * Budget (select), Project Type (select), Requirements (rich_text),
  * Referral, Status (select), Submitted (date).
  */
-export async function createInquiry(data: Inquiry): Promise<void> {
-  const databaseId = process.env.NOTION_DB_ID;
-  if (!databaseId) throw new Error("NOTION_DB_ID is not set");
+export async function createInquiry(env: Env, data: Inquiry): Promise<void> {
+  if (!env.NOTION_API_KEY) throw new Error("NOTION_API_KEY is not set");
+  if (!env.NOTION_DB_ID) throw new Error("NOTION_DB_ID is not set");
 
-  await getClient().pages.create({
-    parent: { database_id: databaseId },
+  const client = new Client({ auth: env.NOTION_API_KEY });
+
+  await client.pages.create({
+    parent: { database_id: env.NOTION_DB_ID },
     properties: {
       Name: { title: [{ text: { content: data.name } }] },
       Email: { email: data.email },

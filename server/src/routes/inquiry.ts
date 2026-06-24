@@ -1,41 +1,54 @@
-import { Router } from "express";
+import { Hono } from "hono";
 import { inquirySchema } from "../schema.js";
 import { verifyTurnstile } from "../turnstile.js";
 import { createInquiry } from "../notion.js";
+import type { Env } from "../env.js";
 
-const router = Router();
+const inquiry = new Hono<{ Bindings: Env }>();
 
-router.post("/", async (req, res) => {
-  const parsed = inquirySchema.safeParse(req.body);
+inquiry.post("/", async (c) => {
+  const ip = c.req.header("cf-connecting-ip") ?? "anon";
+
+  const { success } = await c.env.INQUIRY_LIMITER.limit({ key: ip });
+  if (!success) {
+    return c.json(
+      { ok: false, error: "Too many requests — slow down a moment." },
+      429,
+    );
+  }
+
+  const parsed = inquirySchema.safeParse(await c.req.json().catch(() => ({})));
   if (!parsed.success) {
-    return res.status(400).json({
-      ok: false,
-      error: "Invalid submission.",
-      issues: parsed.error.flatten().fieldErrors,
-    });
+    return c.json(
+      {
+        ok: false,
+        error: "Invalid submission.",
+        issues: parsed.error.flatten().fieldErrors,
+      },
+      400,
+    );
   }
   const data = parsed.data;
 
-  const ip =
-    (req.headers["cf-connecting-ip"] as string) ||
-    req.ip ||
-    undefined;
-  const human = await verifyTurnstile(data.turnstileToken, ip);
+  const human = await verifyTurnstile(
+    c.env.TURNSTILE_SECRET_KEY,
+    data.turnstileToken,
+    ip,
+  );
   if (!human) {
-    return res
-      .status(400)
-      .json({ ok: false, error: "Captcha verification failed." });
+    return c.json({ ok: false, error: "Captcha verification failed." }, 400);
   }
 
   try {
-    await createInquiry(data);
-    return res.json({ ok: true });
+    await createInquiry(c.env, data);
+    return c.json({ ok: true });
   } catch (err) {
     console.error("[inquiry] Notion error:", err);
-    return res
-      .status(502)
-      .json({ ok: false, error: "Could not save your inquiry. Try again." });
+    return c.json(
+      { ok: false, error: "Could not save your inquiry. Try again." },
+      502,
+    );
   }
 });
 
-export default router;
+export default inquiry;

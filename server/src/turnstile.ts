@@ -3,10 +3,10 @@ const VERIFY_URL =
 
 /** Verifies a Cloudflare Turnstile token server-side. */
 export async function verifyTurnstile(
+  secret: string,
   token: string,
   remoteIp?: string,
 ): Promise<boolean> {
-  const secret = process.env.TURNSTILE_SECRET_KEY;
   if (!secret) {
     console.warn("[turnstile] TURNSTILE_SECRET_KEY not set — rejecting.");
     return false;

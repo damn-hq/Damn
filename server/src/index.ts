@@ -1,34 +1,18 @@
-import "dotenv/config";
-import express from "express";
-import cors from "cors";
-import rateLimit from "express-rate-limit";
-import inquiryRouter from "./routes/inquiry.js";
+import { Hono } from "hono";
+import { cors } from "hono/cors";
+import inquiry from "./routes/inquiry.js";
+import type { Env } from "./env.js";
 
-const app = express();
-const PORT = Number(process.env.PORT) || 8787;
-const ORIGIN = process.env.ALLOWED_ORIGIN || "http://localhost:5173";
+const app = new Hono<{ Bindings: Env }>();
 
-app.set("trust proxy", 1);
-app.use(express.json({ limit: "64kb" }));
-app.use(
+app.use("*", (c, next) =>
   cors({
-    origin: ORIGIN.split(",").map((o) => o.trim()),
-    methods: ["POST", "GET"],
-  }),
+    origin: c.env.ALLOWED_ORIGIN.split(",").map((o) => o.trim()),
+    allowMethods: ["GET", "POST"],
+  })(c, next),
 );
 
-const inquiryLimiter = rateLimit({
-  windowMs: 60 * 1000,
-  max: 5,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: { ok: false, error: "Too many requests — slow down a moment." },
-});
+app.get("/health", (c) => c.json({ ok: true }));
+app.route("/api/inquiry", inquiry);
 
-app.get("/health", (_req, res) => res.json({ ok: true }));
-app.use("/api/inquiry", inquiryLimiter, inquiryRouter);
-
-app.listen(PORT, () => {
-  console.log(`Damn API listening on http://localhost:${PORT}`);
-  console.log(`CORS origin: ${ORIGIN}`);
-});
+export default app;
