@@ -7,6 +7,7 @@ import Nav from "./components/Nav";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import Inquiry from "./pages/Inquiry";
+import Links from "./pages/Links";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -45,6 +46,7 @@ export default function App() {
           <Routes location={location}>
             <Route path="/" element={<Home />} />
             <Route path="/inquiry" element={<Inquiry />} />
+            <Route path="/links" element={<Links />} />
             <Route path="*" element={<Home />} />
           </Routes>
         </motion.div>

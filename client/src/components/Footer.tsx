@@ -28,10 +28,32 @@ export default function Footer() {
               Inquiry
             </Link>
             <a
-              href="mailto:hello@damn.studio"
+              href="mailto:damn.hq@proton.me"
               className="transition hover:text-white"
             >
               Email
+            </a>
+            <a
+              href="https://instagram.com/damn.hq"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition hover:text-white"
+            >
+              Instagram
+            </a>
+            <a
+              href="https://github.com/damn-hq"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition hover:text-white"
+            >
+              GitHub
+            </a>
+            <a
+              href="tel:+919824050461"
+              className="transition hover:text-white"
+            >
+              Call
             </a>
           </div>
           <p className="text-xs text-white/30">
