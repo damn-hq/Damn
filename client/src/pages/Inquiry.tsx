@@ -86,6 +86,12 @@ export default function Inquiry() {
       e.requirements = "A little more detail helps us a lot.";
     if (!token) e.captcha = "Please complete the verification.";
     setErrors(e);
+    const first = Object.keys(e)[0];
+    if (first) {
+      const el = document.getElementById(first);
+      el?.scrollIntoView({ behavior: "smooth", block: "center" });
+      (el as HTMLElement | null)?.focus?.();
+    }
     return Object.keys(e).length === 0;
   };
 
