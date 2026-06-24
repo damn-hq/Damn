@@ -16,10 +16,13 @@ function ScrollToTop() {
   return null;
 }
 
+// opacity-only — a `y` here compiles to a transform on the wrapper that holds
+// all page content, putting it on its own composite layer. The fixed navbar
+// (a sibling) would then sample an empty backdrop and lose its blur in prod.
 const pageVariants = {
-  initial: { opacity: 0, y: 12 },
-  enter: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -12 },
+  initial: { opacity: 0 },
+  enter: { opacity: 1 },
+  exit: { opacity: 0 },
 };
 
 export default function App() {
