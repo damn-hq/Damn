@@ -13,36 +13,32 @@ export default function Hero() {
         {/* interactive particle wordmark */}
         <ParticleLogo />
 
-        <motion.h1
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-2 text-center text-3xl font-semibold tracking-tightest text-gradient sm:text-5xl"
+        {/* fade-up: CSS keyframe so SSR ships no inline opacity:0 (crawler/no-JS
+            safe). animationDelay staggers the entry. */}
+        <h1
+          style={{ animationDelay: "0.4s" }}
+          className="fade-up mt-2 text-center text-3xl font-semibold tracking-tightest text-gradient sm:text-5xl"
         >
           DAMN GOOD
-        </motion.h1>
+        </h1>
 
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.55, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-          className="mx-auto mt-6 max-w-xl text-center text-base text-white/55 sm:text-lg text-balance"
+        <p
+          style={{ animationDelay: "0.55s" }}
+          className="fade-up mx-auto mt-6 max-w-xl text-center text-base text-white/55 sm:text-lg text-balance"
         >
           We design and build custom websites from the ground up — shaped
           entirely around what you want, not a template.
-        </motion.p>
+        </p>
 
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-10 flex flex-wrap items-center justify-center gap-4"
+        <div
+          style={{ animationDelay: "0.7s" }}
+          className="fade-up mt-10 flex flex-wrap items-center justify-center gap-4"
         >
           <MagneticButton to="/inquiry">Start a project →</MagneticButton>
           <MagneticButton href="#services" variant="ghost">
             See what we do
           </MagneticButton>
-        </motion.div>
+        </div>
       </motion.div>
     </section>
   );

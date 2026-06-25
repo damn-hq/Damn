@@ -1,12 +1,12 @@
 ---
-// Mirrors the old SPA catch-all (`<Route path="*" element={<Home />} />`).
 import Layout from "../layouts/Layout.astro";
-import Home from "../views/Home";
+import NotFound from "../views/NotFound";
 ---
 
 <Layout
   title="Page not found — Damn"
-  description="That page doesn't exist. Here's the Damn home page instead."
+  description="That page doesn't exist."
+  footer={false}
 >
-  <Home client:load />
+  <NotFound client:load />
 </Layout>

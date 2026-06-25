@@ -10,11 +10,13 @@ import { CONTACT, TAGLINE } from "../lib/site";
 interface Props {
   title?: string;
   description?: string;
+  footer?: boolean;
 }
 
 const {
   title = "Damn — Damn Good Websites",
   description = "Damn — custom websites, designed and built damn good. Tell us what you want; we build it to spec.",
+  footer = true,
 } = Astro.props;
 
 // Absolute URLs for canonical + social scrapers (need full origin, not paths).
@@ -75,6 +77,6 @@ const orgSchema = {
     <CustomCursor client:idle transition:persist />
     <Nav client:load transition:persist />
     <slot />
-    <Footer />
+    {footer && <Footer />}
   </body>
 </html>
