@@ -1,9 +1,11 @@
+// Mirrors server/src/schema.ts (inquirySchema). Keep field optionality in sync
+// with the zod schema — the Worker is the source of truth on validation.
 export type InquiryPayload = {
   name: string;
   email: string;
   company?: string;
-  budget: string;
-  projectType: string;
+  budget?: string;
+  projectType?: string;
   requirements: string;
   referral?: string;
   turnstileToken: string;

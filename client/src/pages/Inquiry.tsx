@@ -8,6 +8,13 @@ import { submitInquiry } from "../lib/api";
 
 const SITE_KEY =
   import.meta.env.VITE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA";
+// In prod the test key always passes the client widget but fails server-side
+// siteverify, silently breaking the form. Surface the misconfig loudly.
+if (import.meta.env.PROD && !import.meta.env.VITE_TURNSTILE_SITE_KEY) {
+  console.error(
+    "VITE_TURNSTILE_SITE_KEY is missing — using the Turnstile test key; submissions will fail server verification.",
+  );
+}
 
 // Show INR bands to visitors in India, USD to everyone else. Detected from the
 // browser timezone (no network / geo-IP needed).
@@ -61,7 +68,7 @@ export default function Inquiry() {
     name: "",
     email: "",
     company: "",
-    budget: budgets[5],
+    budget: budgets[budgets.length - 1], // "Not sure yet"
     projectType: projectTypes[0],
     requirements: "",
     referral: "",

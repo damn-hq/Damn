@@ -105,9 +105,22 @@ export default function ParticleLogo({ src = "/logo.png" }: { src?: string }) {
       // by PAD), so the wordmark still renders centered over the wrap.
       const offX = (width - bw * fit) / 2 + PAD;
       const offY = (height - bh * fit) / 2 + PAD;
-      const next: Particle[] = pts.map((p) => {
+      // pts count is fixed (sample size + gap are constant), so on a resize the
+      // particle array length is stable — only the home coords/size change.
+      // Reuse existing particles in that case so a resize (e.g. mobile address
+      // bar showing/hiding) recomputes homes WITHOUT re-scattering the wordmark.
+      const reuse = particles.length === pts.length;
+      const size = gap * 0.52 * Math.min(fit, 1.4);
+      particles = pts.map((p, idx) => {
         const hx = (p.x - minX) * fit + offX;
         const hy = (p.y - minY) * fit + offY;
+        if (reuse) {
+          const prev = particles[idx];
+          prev.hx = hx;
+          prev.hy = hy;
+          prev.size = size;
+          return prev;
+        }
         return {
           hx,
           hy,
@@ -115,10 +128,9 @@ export default function ParticleLogo({ src = "/logo.png" }: { src?: string }) {
           y: reduced ? hy : Math.random() * ch,
           vx: 0,
           vy: 0,
-          size: gap * 0.52 * Math.min(fit, 1.4),
+          size,
         };
       });
-      particles = next;
     }
 
     function frame() {

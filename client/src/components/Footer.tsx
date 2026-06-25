@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { CONTACT, TAGLINE } from "../lib/site";
 
 export default function Footer() {
   return (
@@ -11,9 +12,7 @@ export default function Footer() {
               DAMN
             </span>
           </div>
-          <p className="mt-3 max-w-xs text-sm text-white/45">
-            Custom websites, built to your exact requirements. Damn good.
-          </p>
+          <p className="mt-3 max-w-xs text-sm text-white/45">{TAGLINE}</p>
         </div>
 
         <div className="flex flex-col items-center gap-4 md:items-end">
@@ -28,13 +27,13 @@ export default function Footer() {
               Inquiry
             </Link>
             <a
-              href="mailto:damn.hq@proton.me"
+              href={`mailto:${CONTACT.email}`}
               className="transition hover:text-white"
             >
               Email
             </a>
             <a
-              href="https://instagram.com/damn.hq"
+              href={CONTACT.instagram}
               target="_blank"
               rel="noopener noreferrer"
               className="transition hover:text-white"
@@ -42,7 +41,7 @@ export default function Footer() {
               Instagram
             </a>
             <a
-              href="https://github.com/damn-hq"
+              href={CONTACT.github}
               target="_blank"
               rel="noopener noreferrer"
               className="transition hover:text-white"
@@ -50,7 +49,7 @@ export default function Footer() {
               GitHub
             </a>
             <a
-              href="tel:+919824050461"
+              href={`tel:${CONTACT.phone}`}
               className="transition hover:text-white"
             >
               Call

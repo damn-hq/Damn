@@ -9,14 +9,6 @@ import Home from "./pages/Home";
 import Inquiry from "./pages/Inquiry";
 import Links from "./pages/Links";
 
-function ScrollToTop() {
-  const { pathname } = useLocation();
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
-  return null;
-}
-
 // opacity-only — a `y` here compiles to a transform on the wrapper that holds
 // all page content, putting it on its own composite layer. The fixed navbar
 // (a sibling) would then sample an empty backdrop and lose its blur in prod.
@@ -28,12 +20,12 @@ const pageVariants = {
 
 export default function App() {
   const location = useLocation();
+  useEffect(() => { window.scrollTo(0, 0); }, [location.pathname]);
   return (
     <>
       <GradientBackground />
       <CustomCursor />
       <Nav />
-      <ScrollToTop />
       <AnimatePresence mode="wait">
         <motion.div
           key={location.pathname}

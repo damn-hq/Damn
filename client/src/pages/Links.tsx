@@ -1,32 +1,11 @@
 import Glass from "../components/Glass";
+import { CONTACT, TAGLINE } from "../lib/site";
 
-type LinkItem = {
-  label: string;
-  value: string;
-  href: string;
-};
-
-const links: LinkItem[] = [
-  {
-    label: "Instagram",
-    value: "@damn.hq",
-    href: "https://instagram.com/damn.hq",
-  },
-  {
-    label: "GitHub",
-    value: "github.com/damn-hq",
-    href: "https://github.com/damn-hq",
-  },
-  {
-    label: "Email",
-    value: "damn.hq@proton.me",
-    href: "mailto:damn.hq@proton.me",
-  },
-  {
-    label: "Phone",
-    value: "+91 98240 50461",
-    href: "tel:+919824050461",
-  },
+const links = [
+  { label: "Instagram", value: "@damn.hq", href: CONTACT.instagram },
+  { label: "GitHub", value: "github.com/damn-hq", href: CONTACT.github },
+  { label: "Email", value: CONTACT.email, href: `mailto:${CONTACT.email}` },
+  { label: "Phone", value: CONTACT.phoneDisplay, href: `tel:${CONTACT.phone}` },
 ];
 
 export default function Links() {
@@ -38,9 +17,7 @@ export default function Links() {
           DAMN
         </span>
       </div>
-      <p className="mt-3 text-center text-sm text-white/45">
-        Custom websites, built to your exact requirements. Damn good.
-      </p>
+      <p className="mt-3 text-center text-sm text-white/45">{TAGLINE}</p>
 
       <div className="mt-10 flex w-full flex-col gap-3">
         {links.map((link) => {
