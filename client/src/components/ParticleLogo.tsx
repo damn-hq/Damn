@@ -44,6 +44,9 @@ export default function ParticleLogo({ src = "/logo.png" }: { src?: string }) {
       matchMedia("(hover: none) and (pointer: coarse)").matches;
     const PAD = isTouch ? 0 : 90;
     const mouse = { x: -9999, y: -9999, down: false };
+    // rapid-click tracking: 5+ clicks within the window triggers a full
+    // scatter-and-reform (mirrors the page-load intro animation).
+    const clickStamps: number[] = [];
 
     const img = new Image();
     img.src = src;
@@ -169,6 +172,17 @@ export default function ParticleLogo({ src = "/logo.png" }: { src?: string }) {
       mouse.x = -9999;
       mouse.y = -9999;
     };
+    // blow every particle out to a random scatter point, then let the home
+    // spring pull them back — same reform as the initial load.
+    function fullBurst() {
+      for (const p of particles) {
+        const ang = Math.random() * Math.PI * 2;
+        const speed = 24 + Math.random() * 22;
+        p.vx = Math.cos(ang) * speed;
+        p.vy = Math.sin(ang) * speed;
+      }
+    }
+
     const onDown = () => {
       mouse.down = true;
       // radial burst
@@ -181,6 +195,15 @@ export default function ParticleLogo({ src = "/logo.png" }: { src?: string }) {
           p.vx += (dx / dist) * f * 26;
           p.vy += (dy / dist) * f * 26;
         }
+      }
+
+      // rapid-click detection: keep only clicks from the last 1.2s
+      const now = performance.now();
+      clickStamps.push(now);
+      while (clickStamps.length && now - clickStamps[0] > 1200) clickStamps.shift();
+      if (clickStamps.length >= 5) {
+        clickStamps.length = 0;
+        fullBurst();
       }
     };
     const onUp = () => {
