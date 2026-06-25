@@ -17,7 +17,7 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-col items-center gap-4 md:items-end">
-          <div className="flex gap-6 text-sm text-white/55">
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-3 md:justify-end text-sm text-white/55">
             <a href="/#services" className="transition hover:text-white">
               Work
             </a>

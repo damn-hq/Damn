@@ -15,10 +15,20 @@ export default function GradientBackground() {
   const v = useRef({ x: 0.5, y: 0.4 });
   const c = useRef({ x: 0.5, y: 0.6 });
   const reduced = useRef(prefersReducedMotion());
+  // phone/tablet (no hover, coarse pointer): blobs self-animate since there's
+  // no cursor to follow.
+  const isTouch = useRef(
+    typeof matchMedia !== "undefined" &&
+      matchMedia("(hover: none) and (pointer: coarse)").matches,
+  );
+  // once a real (mouse/pen) pointer moves we follow the cursor instead of the
+  // auto path — covers touchscreen laptops that also report a coarse pointer.
+  const cursorActive = useRef(false);
 
   // --- pointer (blobs use normalised; geometry uses pixel coords) ---
   useEffect(() => {
     const onMove = (e: PointerEvent) => {
+      if (e.pointerType !== "touch") cursorActive.current = true;
       target.current.x = e.clientX / window.innerWidth;
       target.current.y = e.clientY / window.innerHeight;
     };
@@ -117,12 +127,12 @@ export default function GradientBackground() {
         const near = dm < 140;
         poly(n);
         ctx.strokeStyle = near
-          ? "rgba(103,232,249,0.5)"
-          : "rgba(229,229,229,0.09)";
-        ctx.lineWidth = near ? 1.3 : 1;
+          ? "rgba(103,232,249,0.2)"
+          : "rgba(229,229,229,0.07)";
+        ctx.lineWidth = near ? 1.1 : 1;
         ctx.stroke();
         if (near) {
-          ctx.fillStyle = "rgba(34,211,238,0.06)";
+          ctx.fillStyle = "rgba(34,211,238,0.02)";
           ctx.fill();
         }
       }
@@ -164,6 +174,12 @@ export default function GradientBackground() {
   // --- blob parallax ---
   useRaf((_, t) => {
     const drift = reduced.current ? 0 : 1;
+    // touch devices have no cursor: sweep the target across the viewport on a
+    // slow lissajous path so the gradient is always in motion.
+    if (isTouch.current && !cursorActive.current && !reduced.current) {
+      target.current.x = 0.5 + Math.sin(t * 0.11) * 0.32;
+      target.current.y = 0.5 + Math.cos(t * 0.07) * 0.32;
+    }
     const dx = Math.sin(t * 0.18) * 0.06 * drift;
     const dy = Math.cos(t * 0.13) * 0.06 * drift;
     const tx = target.current.x + dx;
@@ -189,19 +205,19 @@ export default function GradientBackground() {
     >
       <div
         ref={violetRef}
-        className="absolute left-0 top-0 h-[55vmax] w-[55vmax] rounded-full opacity-60 will-change-transform"
+        className="absolute left-0 top-0 h-[64vmax] w-[64vmax] rounded-full opacity-90 will-change-transform"
         style={{
           background:
-            "radial-gradient(circle at center, rgba(124,58,237,0.55), rgba(124,58,237,0) 60%)",
+            "radial-gradient(circle at center, rgba(124,58,237,0.85), rgba(124,58,237,0) 64%)",
           filter: "blur(120px)",
         }}
       />
       <div
         ref={cyanRef}
-        className="absolute left-0 top-0 h-[48vmax] w-[48vmax] rounded-full opacity-50 will-change-transform"
+        className="absolute left-0 top-0 h-[56vmax] w-[56vmax] rounded-full opacity-80 will-change-transform"
         style={{
           background:
-            "radial-gradient(circle at center, rgba(34,211,238,0.5), rgba(34,211,238,0) 60%)",
+            "radial-gradient(circle at center, rgba(34,211,238,0.78), rgba(34,211,238,0) 64%)",
           filter: "blur(120px)",
         }}
       />
@@ -215,7 +231,7 @@ export default function GradientBackground() {
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(120% 120% at 50% 0%, rgba(10,10,11,0) 40%, rgba(10,10,11,0.85) 100%)",
+            "radial-gradient(120% 120% at 50% 0%, rgba(10,10,11,0) 45%, rgba(10,10,11,0.7) 100%)",
         }}
       />
       <div

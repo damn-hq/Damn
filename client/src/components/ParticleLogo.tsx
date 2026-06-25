@@ -31,8 +31,18 @@ export default function ParticleLogo({ src = "/logo.png" }: { src?: string }) {
 
     let particles: Particle[] = [];
     let raf = 0;
-    let width = 0;
-    let height = 0;
+    let width = 0; // wrap width
+    let height = 0; // wrap height
+    let cw = 0; // canvas (padded) width
+    let ch = 0; // canvas (padded) height
+    // overscan: canvas extends past the wrap so cursor-repelled particles near
+    // the left/right (and top/bottom) edges aren't clipped by the canvas bounds.
+    // Touch devices have no cursor repulsion, so skip overscan there — on a
+    // narrow phone it would push the canvas past the viewport and shift layout.
+    const isTouch =
+      typeof matchMedia !== "undefined" &&
+      matchMedia("(hover: none) and (pointer: coarse)").matches;
+    const PAD = isTouch ? 0 : 90;
     const mouse = { x: -9999, y: -9999, down: false };
 
     const img = new Image();
@@ -42,10 +52,14 @@ export default function ParticleLogo({ src = "/logo.png" }: { src?: string }) {
       const rect = wrap!.getBoundingClientRect();
       width = rect.width;
       height = rect.height;
-      canvas!.width = width * dpr;
-      canvas!.height = height * dpr;
-      canvas!.style.width = `${width}px`;
-      canvas!.style.height = `${height}px`;
+      cw = width + PAD * 2;
+      ch = height + PAD * 2;
+      canvas!.width = cw * dpr;
+      canvas!.height = ch * dpr;
+      canvas!.style.width = `${cw}px`;
+      canvas!.style.height = `${ch}px`;
+      canvas!.style.top = `${-PAD}px`;
+      canvas!.style.left = `${-PAD}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       // Draw logo onto a fixed high-res offscreen canvas — sampling density is
@@ -84,16 +98,18 @@ export default function ParticleLogo({ src = "/logo.png" }: { src?: string }) {
       const bh = Math.max(1, maxY - minY);
       // contain the bbox in the wrap with a small margin, then centre it
       const fit = Math.min((width * 0.98) / bw, (height * 0.98) / bh);
-      const offX = (width - bw * fit) / 2;
-      const offY = (height - bh * fit) / 2;
+      // +PAD shifts home coords into the padded canvas space (wrap sits inset
+      // by PAD), so the wordmark still renders centered over the wrap.
+      const offX = (width - bw * fit) / 2 + PAD;
+      const offY = (height - bh * fit) / 2 + PAD;
       const next: Particle[] = pts.map((p) => {
         const hx = (p.x - minX) * fit + offX;
         const hy = (p.y - minY) * fit + offY;
         return {
           hx,
           hy,
-          x: reduced ? hx : Math.random() * width,
-          y: reduced ? hy : Math.random() * height,
+          x: reduced ? hx : Math.random() * cw,
+          y: reduced ? hy : Math.random() * ch,
           vx: 0,
           vy: 0,
           size: gap * 0.52 * Math.min(fit, 1.4),
@@ -103,7 +119,7 @@ export default function ParticleLogo({ src = "/logo.png" }: { src?: string }) {
     }
 
     function frame() {
-      ctx.clearRect(0, 0, width, height);
+      ctx.clearRect(0, 0, cw, ch);
       const repelR = 70;
       for (const p of particles) {
         // spring home
@@ -203,7 +219,7 @@ export default function ParticleLogo({ src = "/logo.png" }: { src?: string }) {
       className="relative mx-auto aspect-[1/0.34] w-full max-w-4xl select-none"
       data-cursor="view"
     >
-      <canvas ref={canvasRef} className="h-full w-full" />
+      <canvas ref={canvasRef} className="pointer-events-auto absolute left-0 top-0" />
     </div>
   );
 }
