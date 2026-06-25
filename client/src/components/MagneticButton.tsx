@@ -1,5 +1,4 @@
 import { useRef, type ReactNode } from "react";
-import { Link } from "react-router-dom";
 
 type Props = {
   children: ReactNode;
@@ -61,15 +60,11 @@ export default function MagneticButton({
   const cls = `${base} ${styles} ${className}`;
   const handlers = { onMouseMove: onMove, onMouseLeave: reset };
 
-  if (to)
+  // MPA: `to` is now a plain in-site link (full page nav), same as `href`.
+  const linkHref = to ?? href;
+  if (linkHref)
     return (
-      <Link to={to} className={cls} {...handlers}>
-        {inner}
-      </Link>
-    );
-  if (href)
-    return (
-      <a href={href} className={cls} {...handlers}>
+      <a href={linkHref} className={cls} {...handlers}>
         {inner}
       </a>
     );

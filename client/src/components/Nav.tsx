@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import MagneticButton from "./MagneticButton";
 
@@ -11,13 +10,22 @@ const links = [
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
-  const { pathname } = useLocation();
+  // MPA + transition:persist: Nav survives navigations, so track the path
+  // reactively. astro:page-load fires on initial load and after each swap.
+  const [pathname, setPathname] = useState(
+    typeof window !== "undefined" ? window.location.pathname : "/",
+  );
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const onNav = () => setPathname(window.location.pathname);
+    document.addEventListener("astro:page-load", onNav);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      document.removeEventListener("astro:page-load", onNav);
+    };
   }, []);
 
   return (
@@ -40,8 +48,8 @@ export default function Nav() {
             scrolled ? "opacity-100" : "opacity-0"
           }`}
         />
-        <Link
-          to="/"
+        <a
+          href="/"
           className="relative flex items-center gap-2.5 pl-2"
           aria-label="Damn home"
         >
@@ -49,7 +57,7 @@ export default function Nav() {
           <span className="text-lg font-semibold tracking-tightest text-bone">
             DAMN
           </span>
-        </Link>
+        </a>
 
         <div className="relative hidden items-center gap-8 md:flex">
           {links.map((l) => (

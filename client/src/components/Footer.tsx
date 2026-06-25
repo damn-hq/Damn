@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { CONTACT, TAGLINE } from "../lib/site";
 
 export default function Footer() {
@@ -23,9 +22,9 @@ export default function Footer() {
             <a href="/#process" className="transition hover:text-white">
               Process
             </a>
-            <Link to="/inquiry" className="transition hover:text-white">
+            <a href="/inquiry" className="transition hover:text-white">
               Inquiry
-            </Link>
+            </a>
             <a
               href={`mailto:${CONTACT.email}`}
               className="transition hover:text-white"

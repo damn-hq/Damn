@@ -8,9 +8,12 @@ updates:
       # Major bumps need manual migration + visual QA; pin to current major.
       - dependency-name: tailwindcss
         update-types: [version-update:semver-major]
-      - dependency-name: react-router-dom
-        update-types: [version-update:semver-major]
       - dependency-name: framer-motion
+        update-types: [version-update:semver-major]
+      # Astro core + adapters version-lock together; majors are breaking.
+      - dependency-name: astro
+        update-types: [version-update:semver-major]
+      - dependency-name: "@astrojs/*"
         update-types: [version-update:semver-major]
   - package-ecosystem: npm
     directory: /server
