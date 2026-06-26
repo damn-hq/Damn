@@ -7,5 +7,21 @@ import Inquiry from "../views/Inquiry";
   title="Start a project — Damn"
   description="Tell us what you want. Every project is custom — share your idea, requirements and references."
 >
-  <Inquiry client:load />
+  <main class="relative z-10 mx-auto min-h-[100svh] max-w-3xl px-6 pb-28 pt-36">
+    <!-- Static, crawlable heading — outside the form island. -->
+    <div data-reveal>
+      <p class="text-xs uppercase tracking-[0.4em] text-violet-glow">Start a project</p>
+      <h1 class="mt-4 text-4xl font-semibold tracking-tightest text-bone sm:text-6xl text-balance">
+        Tell us what you want.
+      </h1>
+      <p class="mt-5 max-w-xl text-white/55">
+        Every project is custom. Share your idea, requirements and any
+        references — rough is fine. We read every inquiry and reply personally.
+      </p>
+    </div>
+
+    <div data-reveal data-reveal-delay="0.1" class="mt-12">
+      <Inquiry client:load />
+    </div>
+  </main>
 </Layout>

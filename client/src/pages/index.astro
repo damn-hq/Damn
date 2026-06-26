@@ -1,8 +1,209 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Home from "../views/Home";
+import ParticleLogo from "../components/ParticleLogo";
+
+// Static-first homepage: all copy is plain server HTML (no React island wrapper)
+// so any crawler/fetcher — even a byte-capped one — reads it high in the body.
+// The only hydrated island here is the canvas wordmark. Reveal/tilt/magnet are
+// progressive enhancement via the global script in Layout (data-* hooks).
+
+const btnBase =
+  "relative inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-sm font-medium tracking-wide transition-colors duration-300";
+const btnSolid = `${btnBase} text-ink bg-bone hover:bg-white`;
+const btnGhost = `${btnBase} text-bone glass hover:border-white/25`;
+const magInner =
+  "magnetic-inner inline-flex items-center gap-2 transition-transform duration-300 ease-out will-change-transform";
+
+const services = [
+  { n: "01", title: "Custom design", body: "Every layout, motion and detail drawn from scratch around your brand — no themes, no recycled blocks." },
+  { n: "02", title: "Engineered builds", body: "Fast, accessible front-ends in React & TypeScript, wired to whatever backend or CMS your project needs." },
+  { n: "03", title: "Motion & interaction", body: "Particle systems, scroll choreography, liquid-glass surfaces and micro-interactions that feel alive." },
+  { n: "04", title: "Built to your spec", body: "Bring your own requirements, references and ideas — we shape the whole build around your custom inputs." },
+];
+
+const steps = [
+  { k: "Brief", t: "You tell us what you want", b: "Goals, references, must-haves, brand. We take in your custom requirements and turn them into a clear plan." },
+  { k: "Design", t: "We draw it from scratch", b: "Direction, layout and motion built specifically for your project — reviewed with you until it's right." },
+  { k: "Build", t: "We engineer it for real", b: "Production React & TypeScript, performant and accessible, wired to the backend and data you need." },
+  { k: "Ship", t: "We launch it damn good", b: "Tested, polished and deployed — with the handover and support to keep it running." },
+];
+
+const points = [
+  { t: "Genuinely custom", b: "No page builders, no recycled themes. Your site is designed and coded specifically for you." },
+  { t: "Craft over clutter", b: "Considered typography, motion and detail. Restraint where it counts, drama where it earns it." },
+  { t: "Modern stack", b: "React, TypeScript and a performance-first build — maintainable long after launch." },
+  { t: "Your requirements lead", b: "We work from your inputs and ideas. You stay in the loop and in control the whole way." },
+];
+
+const marquee = ["Custom", "Damn Good", "Bespoke", "Interactive", "Crafted", "Yours"];
 ---
 
 <Layout>
-  <Home client:load />
+  <main>
+    <!-- HERO -->
+    <section class="relative flex min-h-[100svh] flex-col items-center justify-center px-6 pt-24">
+      <div class="flex w-full flex-col">
+        <!-- Canvas wordmark sits visually on top (order-first) but later in the
+             DOM so its island + hydration script don't push the copy down. -->
+        <div class="order-first">
+          <ParticleLogo client:visible />
+        </div>
+
+        <h1
+          style="animation-delay:0.4s"
+          class="fade-up mt-2 text-center text-3xl font-semibold tracking-tightest text-gradient sm:text-5xl"
+        >
+          DAMN GOOD
+        </h1>
+
+        <p
+          style="animation-delay:0.55s"
+          class="fade-up mx-auto mt-6 max-w-xl text-center text-base text-white/55 sm:text-lg text-balance"
+        >
+          We design and build custom websites from the ground up — shaped
+          entirely around what you want, not a template.
+        </p>
+
+        <div
+          style="animation-delay:0.7s"
+          class="fade-up mt-10 flex flex-wrap items-center justify-center gap-4"
+        >
+          <a href="/inquiry" data-magnetic data-cursor="view" class={btnSolid}>
+            <span class={magInner}>Start a project →</span>
+          </a>
+          <a href="#services" data-magnetic class={btnGhost}>
+            <span class={magInner}>See what we do</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="services" class="relative z-10 px-6 py-28 sm:py-36">
+      <div class="mx-auto max-w-6xl">
+        <div data-reveal>
+          <p class="text-xs uppercase tracking-[0.4em] text-violet-glow">What we do</p>
+          <h2 class="mt-4 max-w-2xl text-4xl font-semibold tracking-tightest text-bone sm:text-5xl text-balance">
+            Websites built around you — not a template.
+          </h2>
+          <p class="mt-5 max-w-xl text-white/55">
+            We take custom inputs and requirements at every step. Tell us what
+            you want it to do, feel and say — we design and engineer the rest.
+          </p>
+        </div>
+
+        <div class="mt-14 grid gap-5 sm:grid-cols-2">
+          {services.map((s, i) => (
+            <div data-reveal data-reveal-delay={(i * 0.08).toString()}>
+              <div data-tilt data-cursor="view" class="glass glass-sheen relative h-full overflow-hidden rounded-3xl p-8 transition-transform duration-300 ease-out will-change-transform">
+                <div class="tilt-glare pointer-events-none absolute inset-0 transition-[background] duration-200"></div>
+                <div class="relative">
+                  <span class="text-sm font-medium text-white/30">{s.n}</span>
+                  <h3 class="mt-6 text-2xl font-semibold tracking-tight text-bone">{s.title}</h3>
+                  <p class="mt-3 text-white/55">{s.body}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="mt-24">
+        <div
+          class="relative flex overflow-hidden"
+          style="-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)"
+        >
+          <div class="flex shrink-0 animate-marquee items-center gap-10 pr-10">
+            {[...marquee, ...marquee].map((it) => (
+              <span class="flex items-center gap-10 text-2xl font-light uppercase tracking-tightest text-white/35 sm:text-4xl">
+                {it}
+                <span class="text-violet-glow">✺</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROCESS -->
+    <section id="process" class="relative z-10 px-6 py-28 sm:py-36">
+      <div class="mx-auto max-w-6xl">
+        <div data-reveal>
+          <p class="text-xs uppercase tracking-[0.4em] text-cyan-glow">How it works</p>
+          <h2 class="mt-4 max-w-2xl text-4xl font-semibold tracking-tightest text-bone sm:text-5xl text-balance">
+            A process shaped around your input.
+          </h2>
+        </div>
+
+        <div class="mt-16 grid gap-px overflow-hidden rounded-3xl border border-white/10 sm:grid-cols-2 lg:grid-cols-4">
+          {steps.map((s, i) => (
+            <div data-reveal data-reveal-delay={(i * 0.1).toString()} class="h-full">
+              <div class="group relative h-full bg-white/[0.02] p-8 transition-colors duration-500 hover:bg-white/[0.05]">
+                <div class="mb-8 flex items-center gap-3">
+                  <span class="grid h-9 w-9 place-items-center rounded-full border border-white/15 text-sm text-white/70">{i + 1}</span>
+                  <span class="text-xs uppercase tracking-[0.3em] text-white/40">{s.k}</span>
+                </div>
+                <h3 class="text-xl font-semibold tracking-tight text-bone">{s.t}</h3>
+                <p class="mt-3 text-sm text-white/50">{s.b}</p>
+                <span class="absolute bottom-0 left-0 h-px w-0 bg-gradient-to-r from-violet to-cyan transition-all duration-500 group-hover:w-full"></span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- WHY DAMN -->
+    <section id="why" class="relative z-10 px-6 py-28 sm:py-36">
+      <div class="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+        <div data-reveal>
+          <p class="text-xs uppercase tracking-[0.4em] text-violet-glow">Why Damn</p>
+          <h2 class="mt-4 text-4xl font-semibold tracking-tightest text-bone sm:text-5xl text-balance">
+            Built to be <span class="text-gradient">damn good</span> — and unmistakably yours.
+          </h2>
+          <p class="mt-5 max-w-md text-white/55">
+            We're a studio obsessed with the details most teams skip. We take
+            your custom inputs seriously and build to match.
+          </p>
+        </div>
+
+        <div class="grid gap-5 sm:grid-cols-2">
+          {points.map((p, i) => (
+            <div data-reveal data-reveal-delay={(i * 0.08).toString()}>
+              <div data-cursor="view" class="glass glass-sheen h-full rounded-3xl p-7">
+                <div class="mb-5 h-px w-10 bg-gradient-to-r from-violet to-cyan"></div>
+                <h3 class="text-lg font-semibold tracking-tight text-bone">{p.t}</h3>
+                <p class="mt-2 text-sm text-white/50">{p.b}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="relative z-10 px-6 py-28 sm:py-36">
+      <div class="mx-auto max-w-5xl">
+        <div data-reveal>
+          <div class="glass glass-sheen relative overflow-hidden rounded-3xl p-12 text-center sm:p-20">
+            <div aria-hidden class="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full opacity-40 blur-3xl" style="background:radial-gradient(circle,#7c3aed,transparent 70%)"></div>
+            <div aria-hidden class="pointer-events-none absolute -bottom-24 -left-16 h-72 w-72 rounded-full opacity-40 blur-3xl" style="background:radial-gradient(circle,#22d3ee,transparent 70%)"></div>
+            <h2 class="relative text-4xl font-semibold tracking-tightest text-bone sm:text-6xl text-balance">
+              Got something in mind?<br />
+              Let's make it <span class="text-gradient">damn good.</span>
+            </h2>
+            <p class="relative mx-auto mt-6 max-w-md text-white/55">
+              Send us your idea, references and requirements — however rough.
+              We'll take it from there.
+            </p>
+            <div class="relative mt-10 flex justify-center">
+              <a href="/inquiry" data-magnetic data-cursor="view" class={btnSolid}>
+                <span class={magInner}>Start your project →</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
 </Layout>

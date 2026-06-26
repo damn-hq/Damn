@@ -70,13 +70,90 @@ const orgSchema = {
     <ClientRouter />
   </head>
   <body>
+    <!-- Content first in the DOM so crawlers/byte-capped fetchers hit the copy
+         before any island hydration script. The chrome below is all
+         position:fixed, so source order is purely cosmetic here. -->
+    <slot />
+    {footer && <Footer />}
+
     <!-- raf/cursor effects: non-critical, hydrate when idle.
          transition:persist keeps them mounted across navigations so the raf
          loop / cursor state don't restart on every page swap. -->
     <GradientBackground client:idle transition:persist />
     <CustomCursor client:idle transition:persist />
     <Nav client:load transition:persist />
-    <slot />
-    {footer && <Footer />}
+
+    <!-- Progressive enhancement for static markup: scroll-reveal, card tilt,
+         magnetic buttons. Pointer flourishes only — content works without it. -->
+    <script>
+      function enhance() {
+        const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        // Scroll-reveal: arm hidden state (JS only), reveal on intersect.
+        if (!reduced) {
+          const io = new IntersectionObserver(
+            (entries) => {
+              for (const e of entries) {
+                if (e.isIntersecting) {
+                  e.target.classList.add("reveal-in");
+                  io.unobserve(e.target);
+                }
+              }
+            },
+            { rootMargin: "-12% 0px -12% 0px" },
+          );
+          document
+            .querySelectorAll<HTMLElement>("[data-reveal]:not(.reveal-armed)")
+            .forEach((el) => {
+              el.style.setProperty("--reveal-y", `${el.dataset.revealY ?? "28"}px`);
+              if (el.dataset.revealDelay)
+                el.style.transitionDelay = `${el.dataset.revealDelay}s`;
+              el.classList.add("reveal-armed");
+              io.observe(el);
+            });
+        }
+
+        // Magnetic buttons: pull inner span toward the cursor.
+        document
+          .querySelectorAll<HTMLElement>("[data-magnetic]:not([data-bound])")
+          .forEach((el) => {
+            el.dataset.bound = "1";
+            const inner = el.querySelector<HTMLElement>(".magnetic-inner");
+            if (!inner) return;
+            const s = 0.4;
+            el.addEventListener("pointermove", (e) => {
+              const r = el.getBoundingClientRect();
+              inner.style.transform = `translate(${(e.clientX - (r.left + r.width / 2)) * s}px, ${(e.clientY - (r.top + r.height / 2)) * s}px)`;
+            });
+            el.addEventListener("pointerleave", () => {
+              inner.style.transform = "translate(0,0)";
+            });
+          });
+
+        // Tilt cards: rotate + moving specular glare.
+        document
+          .querySelectorAll<HTMLElement>("[data-tilt]:not([data-bound])")
+          .forEach((el) => {
+            el.dataset.bound = "1";
+            const glare = el.querySelector<HTMLElement>(".tilt-glare");
+            const max = 8;
+            el.addEventListener("pointermove", (e) => {
+              const r = el.getBoundingClientRect();
+              const px = (e.clientX - r.left) / r.width;
+              const py = (e.clientY - r.top) / r.height;
+              el.style.transform = `perspective(900px) rotateX(${(0.5 - py) * max * 2}deg) rotateY(${(px - 0.5) * max * 2}deg)`;
+              if (glare)
+                glare.style.background = `radial-gradient(220px circle at ${px * 100}% ${py * 100}%, rgba(255,255,255,0.16), transparent 60%)`;
+            });
+            el.addEventListener("pointerleave", () => {
+              el.style.transform = "perspective(900px) rotateX(0) rotateY(0)";
+              if (glare) glare.style.background = "transparent";
+            });
+          });
+      }
+
+      // Fires on first load and after every view-transition swap.
+      document.addEventListener("astro:page-load", enhance);
+    </script>
   </body>
 </html>

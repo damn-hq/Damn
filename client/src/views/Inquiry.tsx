@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 import Glass from "../components/Glass";
 import MagneticButton from "../components/MagneticButton";
-import Reveal from "../components/Reveal";
 import { submitInquiry } from "../lib/api";
 
 const SITE_KEY =
@@ -118,24 +117,10 @@ export default function Inquiry() {
     }
   };
 
+  // Static heading/intro live in inquiry.astro (plain HTML, crawlable). This
+  // island renders only the interactive form card.
   return (
-    <main className="relative z-10 mx-auto min-h-[100svh] max-w-3xl px-6 pb-28 pt-36">
-      <Reveal>
-        <p className="text-xs uppercase tracking-[0.4em] text-violet-glow">
-          Start a project
-        </p>
-        <h1 className="mt-4 text-4xl font-semibold tracking-tightest text-bone sm:text-6xl text-balance">
-          Tell us what you want.
-        </h1>
-        <p className="mt-5 max-w-xl text-white/55">
-          Every project is custom. Share your idea, requirements and any
-          references — rough is fine. We read every inquiry and reply
-          personally.
-        </p>
-      </Reveal>
-
-      <Reveal delay={0.1}>
-        <Glass className="mt-12 p-7 sm:p-10">
+    <Glass className="p-7 sm:p-10">
           <AnimatePresence mode="wait">
             {status === "ok" ? (
               <motion.div
@@ -322,8 +307,6 @@ export default function Inquiry() {
               </motion.form>
             )}
           </AnimatePresence>
-        </Glass>
-      </Reveal>
-    </main>
+    </Glass>
   );
 }
