@@ -14,6 +14,10 @@ export default defineConfig({
   output: "static",
   integrations: [react(), sitemap()],
   vite: {
+    // Astro only injects PUBLIC_* env vars into client bundles; our public vars
+    // use the VITE_ prefix, so widen envPrefix or they resolve to undefined in
+    // the browser (Turnstile falls back to the test key, API_BASE to localhost).
+    envPrefix: ["PUBLIC_", "VITE_"],
     build: {
       // Preserve the Vite-config note: span WebKit (needs -webkit-backdrop-filter)
       // and Firefox (needs unprefixed) so the CSS minifier keeps both .glass decls.
