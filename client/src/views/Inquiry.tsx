@@ -32,19 +32,19 @@ const isIndia = (() => {
 
 const budgets = isIndia
   ? [
-      "Under ₹25k",
-      "₹25k – ₹50k",
-      "₹50k – ₹75k",
-      "₹75k – ₹1L",
-      "₹1L+",
+      "Under ₹50k",
+      "₹50k – ₹80k",
+      "₹80k – ₹1.2L",
+      "₹1.2L – ₹1.5L",
+      "₹1.5L+",
       "Not sure yet",
     ]
   : [
-      "Under $350",
-      "$350 – $700",
-      "$700 – $1k",
-      "$1k – $1.4k",
-      "$1.4k+",
+      "Under $670",
+      "$670 – $1.1k",
+      "$1.1k – $1.6k",
+      "$1.6k – $2k",
+      "$2k+",
       "Not sure yet",
     ];
 const projectTypes = [
