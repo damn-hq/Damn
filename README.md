@@ -147,3 +147,8 @@ npx wrangler deploy
 | Secret / key          | `npx wrangler secret put <NAME>` (no rebuild)  |
 | Turnstile **site** key| Also needs client rebuild (baked into bundle)  |
 | CORS origin           | Update `ALLOWED_ORIGIN` in `wrangler.toml` + `wrangler deploy` |
+
+## License
+
+Licensed under [Creative Commons Attribution-NonCommercial 4.0 International](https://creativecommons.org/licenses/by-nc/4.0/) (CC BY-NC 4.0).
+Full text in [`docs/LICENSE.txt`](docs/LICENSE.txt).

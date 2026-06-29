@@ -5,6 +5,8 @@
 Marketing site + inquiry pipeline for **Damn** — a custom website studio.
 Quote: _DAMN GOOD_.
 
+See `docs/DESIGN_SPEC.md` for the brand/Instagram-post design spec (format, palette use, layout).
+
 ## Palette (hard constraint — 4 colors only)
 
 | Name   | Hex       |
