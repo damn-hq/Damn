@@ -151,4 +151,4 @@ npx wrangler deploy
 ## License
 
 Licensed under [Creative Commons Attribution-NonCommercial 4.0 International](https://creativecommons.org/licenses/by-nc/4.0/) (CC BY-NC 4.0).
-Full text in [`docs/LICENSE.txt`](docs/LICENSE.txt).
+Full text in [`LICENSE.txt`](LICENSE.txt).
