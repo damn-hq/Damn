@@ -17,13 +17,7 @@ export default {
         },
       },
       fontFamily: {
-        sans: [
-          "Space Grotesk",
-          "Inter",
-          "system-ui",
-          "-apple-system",
-          "sans-serif",
-        ],
+        sans: ["Space Grotesk", "system-ui", "-apple-system", "sans-serif"],
       },
       letterSpacing: {
         tightest: "-0.06em",
