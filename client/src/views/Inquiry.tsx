@@ -105,7 +105,14 @@ export default function Inquiry() {
     setStatus("sending");
     const res = await submitInquiry({ ...form, turnstileToken: token });
     if (res.ok) {
-      window.location.href = `/thanks?to=${encodeURIComponent(form.email)}`;
+      // Pass email to /thanks via sessionStorage, not the URL — keeps it out of
+      // browser history, referrer headers and server logs.
+      try {
+        sessionStorage.setItem("inquiryEmail", form.email);
+      } catch {
+        /* private mode / storage disabled — /thanks just omits the email */
+      }
+      window.location.href = "/thanks";
     } else {
       setStatus("error");
       setServerError(res.error);

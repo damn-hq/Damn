@@ -3,12 +3,19 @@ import ParticleLogo from "../components/ParticleLogo";
 import MagneticButton from "../components/MagneticButton";
 
 export default function Thanks() {
-  // Email is passed as ?to= on redirect from the inquiry form. Render via
-  // React text node (never innerHTML) so the query param can't inject markup.
+  // Email is stashed in sessionStorage by the inquiry form (kept out of the
+  // URL). Read once, then clear so a refresh/back-nav doesn't resurface it.
   const [email, setEmail] = useState("");
   useEffect(() => {
-    const to = new URLSearchParams(window.location.search).get("to");
-    if (to) setEmail(to);
+    try {
+      const stored = sessionStorage.getItem("inquiryEmail");
+      if (stored) {
+        setEmail(stored);
+        sessionStorage.removeItem("inquiryEmail");
+      }
+    } catch {
+      /* storage disabled — render the generic message */
+    }
   }, []);
 
   return (
