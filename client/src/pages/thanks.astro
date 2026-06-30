@@ -1,0 +1,13 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Thanks from "../views/Thanks";
+---
+
+<Layout
+  title="Thanks — Damn"
+  description="Your inquiry landed with us."
+  footer={false}
+  noindex={true}
+>
+  <Thanks client:load />
+</Layout>

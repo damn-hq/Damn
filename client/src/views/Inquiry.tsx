@@ -72,9 +72,7 @@ export default function Inquiry() {
     referral: "",
   });
   const [errors, setErrors] = useState<FieldErrors>({});
-  const [status, setStatus] = useState<"idle" | "sending" | "ok" | "error">(
-    "idle",
-  );
+  const [status, setStatus] = useState<"idle" | "sending" | "error">("idle");
   const [serverError, setServerError] = useState("");
   const [token, setToken] = useState("");
   const turnstileRef = useRef<TurnstileInstance>(null);
@@ -107,7 +105,7 @@ export default function Inquiry() {
     setStatus("sending");
     const res = await submitInquiry({ ...form, turnstileToken: token });
     if (res.ok) {
-      setStatus("ok");
+      window.location.href = `/thanks?to=${encodeURIComponent(form.email)}`;
     } else {
       setStatus("error");
       setServerError(res.error);
@@ -120,20 +118,6 @@ export default function Inquiry() {
   // island renders only the interactive form card.
   return (
     <Glass className="p-7 sm:p-10">
-          {status === "ok" ? (
-              <div className="fade-up py-16 text-center">
-                <div className="mx-auto mb-6 grid h-16 w-16 place-items-center rounded-full bg-gradient-to-br from-violet to-cyan text-2xl text-ink">
-                  ✓
-                </div>
-                <h2 className="text-2xl font-semibold text-bone">
-                  Got it — that&apos;s damn good.
-                </h2>
-                <p className="mx-auto mt-3 max-w-sm text-white/55">
-                  Your inquiry landed with us. We&apos;ll be in touch at{" "}
-                  <span className="text-bone">{form.email}</span> soon.
-                </p>
-              </div>
-            ) : (
               <form onSubmit={onSubmit} className="grid gap-6" noValidate>
                 <div className="grid gap-6 sm:grid-cols-2">
                   <div>
@@ -291,7 +275,6 @@ export default function Inquiry() {
                   </MagneticButton>
                 </div>
               </form>
-            )}
     </Glass>
   );
 }

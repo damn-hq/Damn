@@ -11,12 +11,14 @@ interface Props {
   title?: string;
   description?: string;
   footer?: boolean;
+  noindex?: boolean;
 }
 
 const {
   title = "Damn — Damn Good Websites",
   description = "Damn — custom websites, designed and built damn good. Tell us what you want; we build it to spec.",
   footer = true,
+  noindex = false,
 } = Astro.props;
 
 // Absolute URLs for canonical + social scrapers (need full origin, not paths).
@@ -46,6 +48,7 @@ const orgSchema = {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <meta name="theme-color" content="#0A0A0B" />
+    {noindex && <meta name="robots" content="noindex, follow" />}
     <link rel="canonical" href={canonical} />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Damn" />

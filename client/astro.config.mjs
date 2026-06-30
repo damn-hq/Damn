@@ -12,7 +12,12 @@ export default defineConfig({
   // Production origin — powers canonical URLs, absolute og:image, sitemap.
   site: "https://damn-hq.pages.dev",
   output: "static",
-  integrations: [react(), sitemap()],
+  // /thanks is a post-submit confirmation page — keep it out of the sitemap
+  // (it's also noindex'd in Layout.astro).
+  integrations: [
+    react(),
+    sitemap({ filter: (page) => !page.endsWith("/thanks/") }),
+  ],
   vite: {
     // Astro only injects PUBLIC_* env vars into client bundles; our public vars
     // use the VITE_ prefix, so widen envPrefix or they resolve to undefined in
