@@ -151,6 +151,22 @@ body.cursor-glass [contenteditable="true"] {
       transform: none;
     }
   }
+  /* Nav entrance: animate `top`, NOT transform — a transformed ancestor makes
+     the .glass child's backdrop-filter sample the header box (empty) instead
+     of the page, killing the blur. `top` leaves no residual transform. */
+  .nav-in {
+    animation: nav-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  @keyframes nav-in {
+    from {
+      opacity: 0;
+      top: -80px;
+    }
+    to {
+      opacity: 1;
+      top: 0;
+    }
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

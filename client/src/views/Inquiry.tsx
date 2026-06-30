@@ -1,5 +1,4 @@
 import { useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 import Glass from "../components/Glass";
 import MagneticButton from "../components/MagneticButton";
@@ -121,14 +120,8 @@ export default function Inquiry() {
   // island renders only the interactive form card.
   return (
     <Glass className="p-7 sm:p-10">
-          <AnimatePresence mode="wait">
-            {status === "ok" ? (
-              <motion.div
-                key="ok"
-                initial={{ opacity: 0, scale: 0.96 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="py-16 text-center"
-              >
+          {status === "ok" ? (
+              <div className="fade-up py-16 text-center">
                 <div className="mx-auto mb-6 grid h-16 w-16 place-items-center rounded-full bg-gradient-to-br from-violet to-cyan text-2xl text-ink">
                   ✓
                 </div>
@@ -139,16 +132,9 @@ export default function Inquiry() {
                   Your inquiry landed with us. We&apos;ll be in touch at{" "}
                   <span className="text-bone">{form.email}</span> soon.
                 </p>
-              </motion.div>
+              </div>
             ) : (
-              <motion.form
-                key="form"
-                onSubmit={onSubmit}
-                initial={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="grid gap-6"
-                noValidate
-              >
+              <form onSubmit={onSubmit} className="grid gap-6" noValidate>
                 <div className="grid gap-6 sm:grid-cols-2">
                   <div>
                     <label className={labelCls} htmlFor="name">
@@ -304,9 +290,8 @@ export default function Inquiry() {
                     {status === "sending" ? "Sending…" : "Send inquiry →"}
                   </MagneticButton>
                 </div>
-              </motion.form>
+              </form>
             )}
-          </AnimatePresence>
     </Glass>
   );
 }

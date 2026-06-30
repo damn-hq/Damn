@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
 import MagneticButton from "./MagneticButton";
 
 const links = [
@@ -29,16 +28,7 @@ export default function Nav() {
   }, []);
 
   return (
-    <motion.header
-      // animate `top` (a layout prop), NOT `y`. `y` compiles to a CSS
-      // transform, and a transformed ancestor makes the .glass child's
-      // backdrop-filter sample the header box (empty) instead of the page —
-      // killing the blur in production. `top` leaves no transform behind.
-      initial={{ top: -80, opacity: 0 }}
-      animate={{ top: 0, opacity: 1 }}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed inset-x-0 z-50 flex justify-center px-4 pt-4"
-    >
+    <header className="nav-in fixed inset-x-0 z-50 flex justify-center px-4 pt-4">
       <nav className="relative flex w-full max-w-5xl items-center justify-between rounded-full px-3 py-2.5">
         {/* glass surface fades in on scroll — opacity-only so no border flashes
             mid-transition when returning to the top */}
@@ -79,6 +69,6 @@ export default function Nav() {
           Start a project
         </MagneticButton>
       </nav>
-    </motion.header>
+    </header>
   );
 }
